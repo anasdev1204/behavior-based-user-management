@@ -1,0 +1,26 @@
+project_name: behav-id
+
+paths:
+  data_dir: data
+  raw_dir: data/raw
+  interim_dir: data/interim
+  processed_dir: data/processed
+  models_dir: models
+  logs_dir: logs
+  db_path: data/behav_id.sqlite
+
+collection:
+  window_seconds: 30
+  stride_seconds: 10
+  write_batch_ms: 500
+  capture_text: false
+  store_window_titles: false
+  hash_salt: "placeholder_hash_salt"
+
+system:
+  os_target: "windows"
+  timezone: "local"
+
+privacy:
+  store_raw_key_codes: true
+  store_mouse_positions: true
