@@ -1,20 +1,20 @@
 from pynput import keyboard
 from typing import List, Optional
+
+from src.utils.logging import setup_logging
+
 import time, statistics, threading
 
-from pynput import keyboard
-from typing import List, Optional
-import time, statistics, threading
-
+logger = setup_logging("debug")
 
 class KeyboardCapture:
     SENTENCE_TIMEOUT: int = 1
 
     def __init__(self):
-        # The key_stroke and shortcut lists will hold tuples where the values are ("key/shortcut", hold_time)
+        # The keystroke and shortcut lists will hold tuples where the values are ("key/shortcut", hold_time)
         self.current_pressed_keys_time: dict = {}
 
-        self.key_stroke: List[tuple[str, float]] = []
+        self.keystroke: List[tuple[str, float]] = []
         self.shortcut: List[tuple[str, float]] = []
 
         self.shortcut_modifier_time: float = 0
@@ -33,7 +33,7 @@ class KeyboardCapture:
     def start_capture(self):
         """Start capturing keyboard events in a separate thread"""
         if self.is_running:
-            print("Capture already running")
+            logger.warning("Capture already running")
             return
 
         self.is_running = True
@@ -43,7 +43,7 @@ class KeyboardCapture:
         )
 
         self.listener.start()
-        print("Keyboard capture started")
+        logger.info("Keyboard capture started")
 
     def monitor_typing_timeout(self):
         """Monitor for typing timeout in a separate thread"""
@@ -58,20 +58,20 @@ class KeyboardCapture:
     def stop_capture(self):
         """Stop capturing mouse events"""
         if not self.is_running:
-            print("Capture not running")
+            logger.warning("Capture not running")
             return
 
         self.is_running = False
         if self.listener:
             self.listener.stop()
-        print("Keyboard capture stopped")
+        logger.info("Keyboard capture stopped")
 
     def clear_data(self):
         """Clear all captured data"""
-        self.key_stroke.clear()
+        self.keystroke.clear()
         self.shortcut.clear()
         self.type_speed.clear()
-        print("All data cleared")
+        logger.debug("All data cleared")
 
     @staticmethod
     def _key_to_string(key: keyboard.Key) -> str:
@@ -163,14 +163,14 @@ class KeyboardCapture:
                     del self.current_pressed_keys_time[key]
                 self.active_shortcut_keys.clear()
             else:
-                self.key_stroke.append((key_str, hold_time))
+                self.keystroke.append((key_str, hold_time))
                 del self.current_pressed_keys_time[key_str]
 
     # Statistic methods
 
     def _get_keystroke_stats(self) -> dict:
         """Get statistics about keystrokes"""
-        if not self.key_stroke and not self.shortcut:
+        if not self.keystroke and not self.shortcut:
             return {"message": "No movement data recorded"}
 
         def summarize(data: list[tuple[str, float]]) -> dict:
@@ -178,7 +178,6 @@ class KeyboardCapture:
             for key_str, hold_time in data:
                 stats.setdefault(key_str, []).append(hold_time)
 
-            # Convert list of hold times into summary stats
             return {
                 k: {
                     "avg_hold_time": sum(v) / len(v),
@@ -187,9 +186,21 @@ class KeyboardCapture:
                 for k, v in stats.items()
             }
 
+        keystrokes_summary = summarize(self.keystroke)
+        shortcuts_summary = summarize(self.shortcut)
+
+        # flatten all hold times
+        all_hold_times = [ht for _, ht in self.keystroke + self.shortcut]
+
+        overall_avg = sum(all_hold_times) / len(all_hold_times) if all_hold_times else 0
+
         return {
-            "key_strokes": summarize(self.key_stroke),
-            "shortcuts": summarize(self.shortcut),
+            "keys": keystrokes_summary,
+            "shortcuts": shortcuts_summary,
+            "overall": {
+                "avg_hold_time": overall_avg,
+                "total_presses": len(all_hold_times)
+            }
         }
 
     def _get_type_speed_stats(self) -> dict:
@@ -198,13 +209,13 @@ class KeyboardCapture:
             return {"message": "No typing speed data recorded"}
 
         return {
-            "total_sessions": len(self.type_speed),
-            "average_cpm": round(statistics.mean(self.type_speed), 2),
+            "total_kb_sessions": len(self.type_speed),
+            "avg_cpm": round(statistics.mean(self.type_speed), 2),
             "median_cpm": round(statistics.median(self.type_speed), 2),
             "min_cpm": round(min(self.type_speed), 2),
             "max_cpm": round(max(self.type_speed), 2),
             "std_deviation": round(statistics.stdev(self.type_speed) if len(self.type_speed) > 1 else 0, 2),
-            "all_sessions_cpm": [round(speed, 2) for speed in self.type_speed]
+            "all_kb_sessions_cpm": [round(speed, 2) for speed in self.type_speed]
         }
 
     def get_summary(self) -> dict:

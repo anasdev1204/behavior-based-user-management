@@ -1,6 +1,11 @@
 from pynput import mouse
 from typing import List, Tuple, Optional
+
+from src.utils.logging import setup_logging
+
 import time, statistics, threading
+
+logger = setup_logging("debug")
 
 class MouseCapture:
 
@@ -133,7 +138,7 @@ class MouseCapture:
         return {
             "total_scrolls": len(self.scroll_dy),
             "total_scroll_distance": sum(abs(y) for y in self.scroll_dy),
-            "average_scroll_distance": statistics.mean(self.scroll_dy),
+            "avg_scroll_distance": statistics.mean(self.scroll_dy),
         }
 
     def _get_click_stats(self) -> dict:
@@ -158,6 +163,6 @@ class MouseCapture:
         """Get a summary of all captured data"""
         return {
             "movement": self._get_movement_stats(),
-            "scrolling": self._get_scroll_stats(),
-            "clicking": self._get_click_stats()
+            "scroll": self._get_scroll_stats(),
+            "click": self._get_click_stats()
         }

@@ -1,17 +1,10 @@
 from __future__ import annotations
-import argparse, os, time
 from pathlib import Path
-import yaml
 from src.utils.logging import setup_logging
 from src.utils.storage import EventStore
+from src.utils.config import load_config, ensure_dirs
+import argparse, time, uuid
 
-def load_config(path: str | Path) -> dict:
-    with open(path, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f)
-
-def ensure_dirs(cfg: dict):
-    for key in ("data_dir","raw_dir","interim_dir","processed_dir","models_dir","logs_dir"):
-        Path(cfg["paths"][key]).mkdir(parents=True, exist_ok=True)
 
 def main():
     parser = argparse.ArgumentParser(description="Bootstrap behav-id project")
@@ -27,13 +20,9 @@ def main():
         db_path = cfg["paths"]["db_path"]
         store = EventStore(db_path)
         store.create_schema()
-        # create a placeholder session row (optional)
-        session_id = f"bootstrap_{int(time.time()*1e6):d}"
+        session_id = str(uuid.uuid4())
         store.upsert_session(
             session_id=session_id,
-            user_label=None,
-            device_hash=None,
-            os=cfg["system"].get("os_target","unknown"),
             context="bootstrap",
             start_ts_ns=int(time.time_ns()),
             end_ts_ns=None,
