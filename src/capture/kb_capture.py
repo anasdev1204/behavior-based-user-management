@@ -123,8 +123,10 @@ class KeyboardCapture:
         """Reset typing speed measurement variables"""
         if self.is_sentence and self.temp_no_of_chars > 0:
             time_elapsed = time.time() - self.temp_start
+
             if time_elapsed > 0:
                 chars_per_minute = (self.temp_no_of_chars / time_elapsed) * 60
+                logger.debug(f"Sentence over! typing speed {chars_per_minute} cpm")
                 self.type_speed.append(chars_per_minute)
 
         self.is_sentence = False
@@ -158,6 +160,7 @@ class KeyboardCapture:
             if len(self.active_shortcut_keys) > 0:
                 hold_time = current_time - self.shortcut_modifier_time
                 full_shortcut = "+".join(self.active_shortcut_keys)
+                logger.debug(f"Shortcut done: {full_shortcut}")
                 self.shortcut.append((full_shortcut, hold_time))
                 for key in self.active_shortcut_keys:
                     del self.current_pressed_keys_time[key]

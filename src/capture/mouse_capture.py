@@ -31,7 +31,7 @@ class MouseCapture:
     def start_capture(self):
         """Start capturing mouse events in a separate thread"""
         if self.is_running:
-            print("Capture already running")
+            logger.warning("Capture already running")
             return
 
         self.is_running = True
@@ -42,17 +42,17 @@ class MouseCapture:
         )
 
         self.listener.start()
-        print("Mouse capture started")
+        logger.info("Mouse capture started")
 
     def stop_capture(self):
         """Stop capturing mouse events"""
         if not self.is_running:
-            print("Capture not running")
+            logger.warning("Capture not running")
             return
 
         self.listener.stop()
         self.is_running = False
-        print("Mouse capture stopped")
+        logger.info("Mouse capture stopped")
 
     def clear_data(self):
         """Clear all captured data"""
@@ -61,7 +61,7 @@ class MouseCapture:
         self.scroll_dy.clear()
         self.click_times.clear()
         self.click_positions.clear()
-        print("All data cleared")
+        logger.debug("All data cleared")
 
     def _update_move_stats(self, last_move_x: float, last_move_y: float,
                            new_move_dx: float, new_move_dy: float):
@@ -82,7 +82,7 @@ class MouseCapture:
 
     def _update_scroll_stats(self):
         """Update scroll statistics"""
-        print("Scroll event over")
+        logger.debug("Scroll event over")
         self.scroll_dy.append(self.temp_scroll)
         self.temp_scroll = 0
         self.is_scrolling = False
@@ -90,7 +90,7 @@ class MouseCapture:
     def _on_scroll(self, _x: float, _y: float, _dx: float, _dy: float):
         """Handle mouse scroll events"""
         if not self.is_scrolling and self.temp_scroll == 0:
-            print("Scroll event detected")
+            logger.debug("Scroll event detected")
             self.is_scrolling = True
             timer = threading.Timer(self.SCROLL_INTERVAL, self._update_scroll_stats)
             timer.start()
@@ -111,7 +111,7 @@ class MouseCapture:
             else:
                 self.click_button[button_name] = 1
 
-            print(f"Click: {button} at ({x}, {y})")
+            logger.debug(f"Click: {button} at ({x}, {y})")
 
 
     # Statistic methods
