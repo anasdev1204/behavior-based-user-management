@@ -10,8 +10,8 @@ This project explores a behavior-based user management system that runs as a bac
 
 # Roadmap
 
--   [ ] **Scope, repo, environment, config, storage schema** — Define goals, set up repository, create environment and configuration, and design a local storage format for event streams and features.
--   [ ] **Input capture MVP (keyboard + mouse)** — Collect low-level keyboard and mouse events with minimal overhead.
+-   [x] **Scope, repo, environment, config, storage schema** — Define goals, set up repository, create environment and configuration, and design a local storage format for event streams and features.
+-   [x] **Input capture MVP (keyboard + mouse)** — Collect low-level keyboard and mouse events with minimal overhead.
 -   [ ] **Convert raw events into stable features over rolling windows** — Compute features (e.g., dwell/flight times, path curvature, click cadence) with noise-robust statistics.
 -   [ ] **Labeled data collection + EDA** — Gather self-labeled sessions, build train/validation splits, and perform exploratory analysis.
 -   [ ] **Modeling & validation** — Train per-user anomaly/verification models; evaluate with ROC/PR, equal-error rate, and latency/CPU budget.
