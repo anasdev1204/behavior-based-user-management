@@ -14,7 +14,6 @@ def setup_logging(log_dir: str | Path, name: str = "behav-id", level: int = logg
 
     log_dir = Path(log_dir)
     log_dir.mkdir(parents=True, exist_ok=True)
-
     logger = logging.getLogger(name)
     logger.setLevel(level)
     logger.propagate = False

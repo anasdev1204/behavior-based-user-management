@@ -1,7 +1,7 @@
 from __future__ import annotations
 import sqlite3
 from pathlib import Path
-from typing import Optional
+import logging
 
 SCHEMA_SQL = """
 PRAGMA journal_mode=WAL;
@@ -61,11 +61,13 @@ class EventStore:
     """
     Stores events in SQLite database.
     """
-    def __init__(self, db_path: str | Path):
+    def __init__(self, db_path: str | Path, logger: logging.Logger):
         self.db_path = Path(db_path)
+        self.logger: logging.Logger = logger
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.conn = sqlite3.connect(self.db_path)
         self.conn.execute("PRAGMA foreign_keys = ON;")
+
 
     def create_schema(self) -> None:
         self.conn.executescript(SCHEMA_SQL)
@@ -84,6 +86,7 @@ class EventStore:
             {"session_id": session_id, **kwargs},
         )
         self.conn.commit()
+        self.logger.info(f"Upserted session {session_id}")
 
     def upsert_mouse_data(self, session_id: str, **kwargs) -> None:
         self.conn.execute(
@@ -101,6 +104,7 @@ class EventStore:
             {"session_id": session_id, **kwargs},
         )
         self.conn.commit()
+        self.logger.info(f"Upserted mouse_data {session_id}")
 
     def upsert_kb_data(self, session_id: str, **kwargs) -> None:
         self.conn.execute(
@@ -117,6 +121,7 @@ class EventStore:
             {"session_id": session_id, **kwargs},
         )
         self.conn.commit()
+        self.logger.info(f"Upserted keyboard_data {session_id}")
 
     def upsert_key_stats(self, session_id: str, keys: dict, shortcuts: dict) -> None:
         """
@@ -128,7 +133,7 @@ class EventStore:
             for key, val in keys.items()
         ]
         shortcut_rows = [
-            (session_id, key, val["avg_hold_time"], val["no_of_uses"], False)
+            (session_id, key, val["avg_hold_time"], val["no_of_uses"], True)
             for key, val in shortcuts.items()
         ]
 
@@ -142,6 +147,7 @@ class EventStore:
             rows,
         )
         self.conn.commit()
+        self.logger.info(f"Upserted key_stats {session_id}")
 
     def close(self):
         self.conn.close()

@@ -18,7 +18,7 @@ def main():
 
     if args.init:
         db_path = cfg["paths"]["db_path"]
-        store = EventStore(db_path)
+        store = EventStore(db_path, logger)
         store.create_schema()
         session_id = str(uuid.uuid4())
         store.upsert_session(

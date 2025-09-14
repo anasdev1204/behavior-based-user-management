@@ -18,7 +18,7 @@ collection:
   hash_salt: "placeholder_hash_salt"
 
 system:
-  os_target: "windows"
+  os_target: "darwin"
   timezone: "local"
 
 privacy:

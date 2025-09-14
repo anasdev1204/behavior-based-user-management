@@ -60,7 +60,7 @@ def main():
         logger.info("Keyboard summary collected")
         print_statistics(logger, kb_summary, "KEYBOARD")
 
-        store = EventStore(cfg["paths"]["db_path"])
+        store = EventStore(cfg["paths"]["db_path"], logger)
         session_id = str(uuid.uuid4())
         store.upsert_session(
             session_id=session_id,
@@ -68,6 +68,8 @@ def main():
             start_ts_ns=start_time,
             end_ts_ns=int(time.time()),
         )
+
+        logger.info("Session inserted")
 
         store.upsert_mouse_data(
             session_id=session_id,
@@ -78,12 +80,16 @@ def main():
             clicks_per_minute=mouse_summary.get("click", {}).get("clicks_per_minute"),
         )
 
+        logger.info("Mouse data inserted")
+
         store.upsert_kb_data(
             session_id=session_id,
             avg_cpm=kb_summary.get("type_speed", {}).get("avg_cpm"),
             median_cpm=kb_summary.get("type_speed", {}).get("median_cpm"),
             avg_hold_time=kb_summary.get("keystrokes", {}).get("overall", {}).get("avg_hold_time"),
         )
+
+        logger.info("Keyboard data inserted")
 
         store.upsert_key_stats(
             session_id=session_id,
