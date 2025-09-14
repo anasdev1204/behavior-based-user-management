@@ -1,77 +1,59 @@
 from src.capture.mouse_capture import MouseCapture
 from src.capture.kb_capture import KeyboardCapture
+from src.capture.window_capture import WindowCapture
 
 from src.utils.storage import EventStore
 from src.utils.config import load_config, ensure_dirs
 from src.utils.logging import setup_logging
 
-import threading, time, uuid, logging
+import time, uuid, threading
 
-def print_statistics(logger: logging.Logger, summary: dict, source: str):
-    """
-    Prints statistics about the capture
-    :param logger: logger object
-    :param summary: summary dictionary
-    :param source: source
-    :return:
-    """
-    logger.info("=" * 50)
-    logger.info(f"{source} ACTIVITY SUMMARY")
-    logger.info("=" * 50)
+class CaptureManager:
+    def __init__(self, cfg):
 
-    for category, stats in summary.items():
-        logger.info(f"\n{category.upper()}:")
-        for key, value in stats.items():
-            if isinstance(value, float):
-                logger.info(f"  {key}: {value:.2f}")
-            else:
-                logger.info(f"  {key}: {value}")
+        self.kb = KeyboardCapture()
+        self.mouse = MouseCapture()
+        self.session_start = None
+        self.current_context = None
+        self.logger = setup_logging("logs")
+        self.store = EventStore(cfg["paths"]["db_path"], self.logger)
 
-def main():
-    cfg = load_config("config.yaml")
-    ensure_dirs(cfg)
+    def on_window_change(self, context):
+        if self.current_context is not None:
+            self.end_session()
 
-    logger = setup_logging("logs")
+        self.current_context = context
+        self.session_start = time.time()
+        self.mouse.start_capture()
+        self.kb.start_capture()
+        threading.Thread(target=self.kb.monitor_typing_timeout, daemon=True).start()
 
-    start_time = time.time()
-    mouse_capture = MouseCapture()
-    mouse_capture.start_capture()
 
-    kb_capture = KeyboardCapture()
-    kb_capture.start_capture()
-    timeout_thread = threading.Thread(target=kb_capture.monitor_typing_timeout, daemon=True)
-    timeout_thread.start()
+    def end_session(self):
+        self.kb.stop_capture()
+        self.mouse.stop_capture()
+        kb_summary = self.kb.get_summary()
+        mouse_summary = self.mouse.get_summary()
 
-    logger.info("Mouse capture running... Press Ctrl+C to stop")
-    logger.info("Keyboard capture running... Press Ctrl+C to stop")
+        self.logger.info(f"[+] Ending session {self.current_context}")
 
-    try:
-        while kb_capture.is_running:
-            time.sleep(0.1)
-    except KeyboardInterrupt:
-        logger.warning("Stopping capture...")
-    finally:
-        mouse_capture.stop_capture()
-        mouse_summary = mouse_capture.get_summary()
-        logger.info("Mouse summary collected")
-        print_statistics(logger, mouse_summary, "MOUSE")
-        kb_capture.stop_capture()
-        kb_summary = kb_capture.get_summary()
-        logger.info("Keyboard summary collected")
-        print_statistics(logger, kb_summary, "KEYBOARD")
+        self.logger.info("Mouse summary collected")
+        self.log_statistics(mouse_summary, "MOUSE")
+        self.logger.info("Keyboard summary collected")
+        self.log_statistics(kb_summary, "KEYBOARD")
 
-        store = EventStore(cfg["paths"]["db_path"], logger)
+
         session_id = str(uuid.uuid4())
-        store.upsert_session(
+        self.store.upsert_session(
             session_id=session_id,
-            context="capture",
-            start_ts_ns=start_time,
+            context=f"capture - {self.current_context}",
+            start_ts_ns=self.session_start,
             end_ts_ns=int(time.time()),
         )
 
-        logger.info("Session inserted")
+        self.logger.info("Session inserted")
 
-        store.upsert_mouse_data(
+        self.store.upsert_mouse_data(
             session_id=session_id,
             avg_dx=mouse_summary.get("movement", {}).get("avg_dx"),
             avg_dy=mouse_summary.get("movement", {}).get("avg_dy"),
@@ -80,24 +62,52 @@ def main():
             clicks_per_minute=mouse_summary.get("click", {}).get("clicks_per_minute"),
         )
 
-        logger.info("Mouse data inserted")
+        self.logger.info("Mouse data inserted")
 
-        store.upsert_kb_data(
+        self.store.upsert_kb_data(
             session_id=session_id,
             avg_cpm=kb_summary.get("type_speed", {}).get("avg_cpm"),
             median_cpm=kb_summary.get("type_speed", {}).get("median_cpm"),
             avg_hold_time=kb_summary.get("keystrokes", {}).get("overall", {}).get("avg_hold_time"),
         )
 
-        logger.info("Keyboard data inserted")
+        self.logger.info("Keyboard data inserted")
 
-        store.upsert_key_stats(
+        self.store.upsert_key_stats(
             session_id=session_id,
             keys=kb_summary["keystrokes"]["keys"],
             shortcuts=kb_summary["keystrokes"]["shortcuts"],
         )
 
+        self.current_context = None
+        self.session_start = None
+
+    def log_statistics(self, summary: dict, source: str):
+        """
+        Logs statistics about the capture
+        :param summary: summary dictionary
+        :param source: source
+        :return:
+        """
+        self.logger.info("=" * 50)
+        self.logger.info(f"{source} ACTIVITY SUMMARY")
+        self.logger.info("=" * 50)
+
+        for category, stats in summary.items():
+            self.logger.info(f"\n{category.upper()}:")
+            for key, value in stats.items():
+                if isinstance(value, float):
+                    self.logger.info(f"  {key}: {value:.2f}")
+                else:
+                    self.logger.info(f"  {key}: {value}")
 
 
 if __name__ == "__main__":
-    main()
+    cfg = load_config("config.yaml")
+    ensure_dirs(cfg)
+
+    wc = WindowCapture(window_poll_interval=float(cfg["capture"]["window_poll_interval"]))
+    cm = CaptureManager(cfg)
+    wc.run(cm.on_window_change)
+
+

@@ -17,6 +17,9 @@ collection:
   store_window_titles: false
   hash_salt: "placeholder_hash_salt"
 
+capture:
+  window_poll_interval: 0.5
+
 system:
   os_target: "darwin"
   timezone: "local"
