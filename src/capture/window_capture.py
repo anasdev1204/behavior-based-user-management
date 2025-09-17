@@ -32,6 +32,11 @@ class WindowCapture:
                 time.sleep(self.window_poll_interval)
         except KeyboardInterrupt:
             print("\n[!] Stopping capture...")
+            active_window = self.get_active_window()
+            context = f"{active_window}"
+
+            on_window_change(context)
+
             sys.exit(0)
 
     @staticmethod
