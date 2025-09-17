@@ -52,6 +52,16 @@ class WindowCapture:
                 '''
                 active_window = subprocess.check_output(["osascript", "-e", script]).decode().strip()
                 return active_window
+            elif system == "Windows":
+                import win32gui
+                import win32process
+                import psutil
+
+                hwnd = win32gui.GetForegroundWindow()
+                _, pid = win32process.GetWindowThreadProcessId(hwnd)
+                process = psutil.Process(pid)
+                app_name = process.name()
+                return app_name
 
         except Exception:
             pass
