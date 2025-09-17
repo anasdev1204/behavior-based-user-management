@@ -208,17 +208,14 @@ class KeyboardCapture:
 
     def _get_type_speed_stats(self) -> dict:
         """Get statistics about type-speed"""
-        if not self.type_speed:
-            return {"message": "No typing speed data recorded"}
-
         return {
             "total_kb_sessions": len(self.type_speed),
-            "avg_cpm": round(statistics.mean(self.type_speed), 2),
-            "median_cpm": round(statistics.median(self.type_speed), 2),
-            "min_cpm": round(min(self.type_speed), 2),
-            "max_cpm": round(max(self.type_speed), 2),
+            "avg_cpm": round(statistics.mean(self.type_speed), 2) if self.type_speed else 0,
+            "median_cpm": round(statistics.median(self.type_speed), 2) if self.type_speed else 0,
+            "min_cpm": round(min(self.type_speed), 2) if self.type_speed else 0,
+            "max_cpm": round(max(self.type_speed), 2) if self.type_speed else 0,
             "std_deviation": round(statistics.stdev(self.type_speed) if len(self.type_speed) > 1 else 0, 2),
-            "all_kb_sessions_cpm": [round(speed, 2) for speed in self.type_speed]
+            "all_kb_sessions_cpm": [round(speed, 2) for speed in self.type_speed] if self.type_speed else 0,
         }
 
     def get_summary(self) -> dict:

@@ -143,8 +143,6 @@ class MouseCapture:
 
     def _get_click_stats(self) -> dict:
         """Get statistics about mouse clicks"""
-        if not self.click_times:
-            return {"message": "No click data recorded"}
 
         click_intervals = []
         for i in range(1, len(self.click_times)):
