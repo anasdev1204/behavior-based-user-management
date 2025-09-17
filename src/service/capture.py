@@ -94,7 +94,6 @@ class CaptureManager:
         self.logger.info("=" * 50)
 
         for category, stats in summary.items():
-            self.logger.info(f"\n{category.upper()}:")
             for key, value in stats.items():
                 if isinstance(value, float):
                     self.logger.info(f"  {key}: {value:.2f}")
