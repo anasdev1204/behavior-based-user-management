@@ -7,22 +7,10 @@ paths:
   processed_dir: data/processed
   models_dir: models
   logs_dir: logs
-  db_path: data/behav_id.sqlite
-
-collection:
-  window_seconds: 30
-  stride_seconds: 10
-  write_batch_ms: 500
-  capture_text: false
-  store_window_titles: false
-  hash_salt: "placeholder_hash_salt"
+  db_path: data/db.sqlite
 
 capture:
   window_poll_interval: 0.5
-
-system:
-  os_target: "darwin"
-  timezone: "local"
 
 privacy:
   store_raw_key_codes: true
