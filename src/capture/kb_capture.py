@@ -173,9 +173,6 @@ class KeyboardCapture:
 
     def _get_keystroke_stats(self) -> dict:
         """Get statistics about keystrokes"""
-        if not self.keystroke and not self.shortcut:
-            return {"message": "No movement data recorded"}
-
         def summarize(data: list[tuple[str, float]]) -> dict:
             stats = {}
             for key_str, hold_time in data:
@@ -189,7 +186,7 @@ class KeyboardCapture:
                 for k, v in stats.items()
             }
 
-        keystrokes_summary = summarize(self.keystroke)
+        keystrokes_summary = summarize(self.keystroke) if self.keystroke else {}
         shortcuts_summary = summarize(self.shortcut)
 
         # flatten all hold times
