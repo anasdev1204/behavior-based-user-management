@@ -1,6 +1,6 @@
 # Introduction
 
-This project explores a behavior-based user management system that runs as a background service on Windows. While active, it passively measures on-device interaction patterns (e.g., mouse drag velocity, inter-keystroke intervals) to learn a private, local profile of the primary user and flag anomalies that may indicate someone else is using the machine.
+This project explores a behavior-based user management system that runs as a background service on Windows and MacOS. While active, it passively measures on-device interaction patterns (e.g., mouse drag velocity, inter-keystroke intervals) to learn a private, local profile of the primary user and flag anomalies that may indicate someone else is using the machine.
 
 # Use Cases
 
