@@ -23,6 +23,7 @@ Currently, the program only captures the data from the user input and does not p
     python -m venv .venv
     ./.venv/Scripts/activate # On MacOs: source ./venv/bin/activate
     pip install -r requirements.txt
+    pip install pywin32 # Only for windows
 ```
 
 3. Bootstrap the program
