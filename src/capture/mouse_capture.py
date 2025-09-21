@@ -122,23 +122,21 @@ class MouseCapture:
             return {"message": "No movement data recorded"}
 
         return {
-            "total_movements": len(self.move_dx),
-            "avg_dx": statistics.mean(self.move_dx),
-            "avg_dy": statistics.mean(self.move_dy),
-            "max_dx": max(self.move_dx),
-            "max_dy": max(self.move_dy),
-            "total_distance": sum(self.move_dx) + sum(self.move_dy)
+            "total_movements": len(self.move_dx) or 0,
+            "avg_dx": statistics.mean(self.move_dx) or 0,
+            "avg_dy": statistics.mean(self.move_dy) or 0,
+            "max_dx": max(self.move_dx) or 0,
+            "max_dy": max(self.move_dy) or 0,
+            "total_distance": (sum(self.move_dx) + sum(self.move_dy)) or 0
         }
 
     def _get_scroll_stats(self) -> dict:
         """Get statistics about mouse scrolling"""
-        if not self.scroll_dy:
-            return {"message": "No scroll data recorded"}
 
         return {
-            "total_scrolls": len(self.scroll_dy),
-            "total_scroll_distance": sum(abs(y) for y in self.scroll_dy),
-            "avg_scroll_distance": statistics.mean(self.scroll_dy),
+            "total_scrolls": len(self.scroll_dy) or 0,
+            "total_scroll_distance": sum(abs(y) for y in self.scroll_dy) or 0,
+            "avg_scroll_distance": statistics.mean(self.scroll_dy or [0]) ,
         }
 
     def _get_click_stats(self) -> dict:
@@ -150,7 +148,7 @@ class MouseCapture:
             click_intervals.append(interval)
 
         return {
-            "total_clicks": len(self.click_times),
+            "total_clicks": len(self.click_times) or 0,
             "avg_click_interval": statistics.mean(click_intervals) if click_intervals else 0,
             "clicks_per_minute": len(self.click_times) / ((self.click_times[-1] - self.click_times[0]) / 60)
             if len(self.click_times) > 1 else 0,

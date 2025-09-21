@@ -11,11 +11,11 @@ class KeyboardCapture:
     SENTENCE_TIMEOUT: int = 1
 
     def __init__(self):
-        # The keystroke and shortcut lists will hold tuples where the values are ("key/shortcut", hold_time)
+
         self.current_pressed_keys_time: dict = {}
 
-        self.keystroke: List[tuple[str, float]] = []
-        self.shortcut: List[tuple[str, float]] = []
+        self.keystroke: List[float] = []
+        self.shortcut: List[float] = []
 
         self.shortcut_modifier_time: float = 0
         self.active_shortcut_keys: list[str] = []
@@ -139,8 +139,8 @@ class KeyboardCapture:
         key_str = self._key_to_string(key)
         if key_str in self.current_pressed_keys_time:
             return
-        current_time = time.time()
 
+        current_time = time.time()
         self.last_key_time = current_time
         self.current_pressed_keys_time[key_str] = current_time
 
@@ -159,48 +159,27 @@ class KeyboardCapture:
 
             if len(self.active_shortcut_keys) > 0:
                 hold_time = current_time - self.shortcut_modifier_time
-                full_shortcut = "+".join(self.active_shortcut_keys)
-                logger.debug(f"Shortcut done: {full_shortcut}")
-                self.shortcut.append((full_shortcut, hold_time))
+                self.shortcut.append(hold_time)
                 for key in self.active_shortcut_keys:
                     del self.current_pressed_keys_time[key]
                 self.active_shortcut_keys.clear()
             else:
-                self.keystroke.append((key_str, hold_time))
+                self.keystroke.append(hold_time)
                 del self.current_pressed_keys_time[key_str]
 
     # Statistic methods
 
     def _get_keystroke_stats(self) -> dict:
         """Get statistics about keystrokes"""
-        def summarize(data: list[tuple[str, float]]) -> dict:
-            stats = {}
-            for key_str, hold_time in data:
-                stats.setdefault(key_str, []).append(hold_time)
-
-            return {
-                k: {
-                    "avg_hold_time": sum(v) / len(v),
-                    "no_of_uses": len(v)
-                }
-                for k, v in stats.items()
-            }
-
-        keystrokes_summary = summarize(self.keystroke) if self.keystroke else {}
-        shortcuts_summary = summarize(self.shortcut)
-
-        # flatten all hold times
-        all_hold_times = [ht for _, ht in self.keystroke + self.shortcut]
-
-        overall_avg = sum(all_hold_times) / len(all_hold_times) if all_hold_times else 0
+        all_keystrokes = self.keystroke
+        all_shortcuts = self.shortcut
+        all_hold_times = all_keystrokes + all_shortcuts
 
         return {
-            "keys": keystrokes_summary,
-            "shortcuts": shortcuts_summary,
-            "overall": {
-                "avg_hold_time": overall_avg,
-                "total_presses": len(all_hold_times)
-            }
+            "keystroke_count": len(all_keystrokes) or 0,
+            "shortcut_count": len(all_shortcuts) or 0,
+            "avg_hold_time": sum(all_hold_times) / len(all_hold_times) if all_hold_times else 0,
+            "all_hold_times": all_hold_times
         }
 
     def _get_type_speed_stats(self) -> dict:

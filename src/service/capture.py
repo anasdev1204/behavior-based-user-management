@@ -67,7 +67,9 @@ class CaptureManager:
             session_id=session_id,
             avg_cpm=kb_summary.get("type_speed", {}).get("avg_cpm"),
             median_cpm=kb_summary.get("type_speed", {}).get("median_cpm"),
-            avg_hold_time=kb_summary.get("keystrokes", {}).get("overall", {}).get("avg_hold_time"),
+            keystroke_count=kb_summary.get("keystrokes", {}).get("keystroke_count"),
+            shortcut_count=kb_summary.get("keystrokes", {}).get("shortcut_count"),
+            avg_hold_time=kb_summary.get("keystrokes", {}).get("avg_hold_time"),
         )
 
         self.logger.info("Keyboard data inserted")
