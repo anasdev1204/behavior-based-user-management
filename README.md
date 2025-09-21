@@ -28,12 +28,12 @@ Currently, the program only captures the data from the user input and does not p
 
 3. Bootstrap the program
 ```bash
-    python -m src.service.bootstrap --init
+    python -m src.service.bootstrap --init --label your_label
 ```
 
 4. Start the capture
 ```bash
-    python -m src.service.capture --init
+    python -m src.service.capture
 ```
 All captured data will be stored in the sqlite db located in `db_path` (config.yaml).
 
