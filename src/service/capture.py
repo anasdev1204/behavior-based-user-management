@@ -16,7 +16,7 @@ class CaptureManager:
         self.session_start = None
         self.current_context = None
         self.logger = setup_logging("logs")
-        self.store = EventStore(cfg["paths"]["db_path"], self.logger)
+        self.store = EventStore(cfg["paths"]["db_path"], self.logger, cfg["session_label"])
 
     def on_window_change(self, context):
         if self.current_context is not None:
@@ -46,9 +46,8 @@ class CaptureManager:
         session_id = str(uuid.uuid4())
         self.store.upsert_session(
             session_id=session_id,
-            context=f"capture - {self.current_context}",
-            start_ts_ns=self.session_start,
-            end_ts_ns=int(time.time()),
+            context="capture",
+            duration=int(time.time()) -self.session_start
         )
 
         self.logger.info("Session inserted")
@@ -73,11 +72,6 @@ class CaptureManager:
 
         self.logger.info("Keyboard data inserted")
 
-        self.store.upsert_key_stats(
-            session_id=session_id,
-            keys=kb_summary["keystrokes"]["keys"],
-            shortcuts=kb_summary["keystrokes"]["shortcuts"],
-        )
 
         self.current_context = None
         self.session_start = None

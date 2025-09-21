@@ -1,17 +1,11 @@
-project_name: behav-id
-
-paths:
-  data_dir: data
-  raw_dir: data/raw
-  interim_dir: data/interim
-  processed_dir: data/processed
-  models_dir: models
-  logs_dir: logs
-  db_path: data/db.sqlite
-
 capture:
   window_poll_interval: 0.5
-
-privacy:
-  store_raw_key_codes: true
-  store_mouse_positions: true
+paths:
+  data_dir: data
+  db_path: data/db.sqlite
+  interim_dir: data/interim
+  logs_dir: logs
+  models_dir: models
+  processed_dir: data/processed
+  raw_dir: data/raw
+project_name: behave
