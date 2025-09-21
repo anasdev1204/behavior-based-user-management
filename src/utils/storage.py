@@ -57,12 +57,11 @@ class EventStore:
     def upsert_session(self, session_id: str, **kwargs) -> None:
         self.conn.execute(
             """
-            INSERT INTO sessions (session_id, context, duraation, label)
+            INSERT INTO sessions (session_id, context, duration, label)
             VALUES (:session_id, :context, :duration, :label)
             ON CONFLICT(session_id) DO UPDATE SET
               context=COALESCE(:context, context),
-              start_ts_ns=COALESCE(:start_ts_ns, start_ts_ns),
-              end_ts_ns=COALESCE(:end_ts_ns, end_ts_ns)
+              duration=COALESCE(:duration, duration)
             """,
             {"session_id": session_id, **kwargs, "label": self.label},
         )
