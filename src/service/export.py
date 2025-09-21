@@ -101,6 +101,7 @@ class Exporter:
                 try:
                     output_path = pathlib.Path(self.output_path) / "output.csv"
                     with output_path.open("w", newline="", encoding="utf-8") as f:
+                        all_columns = [col for col in all_columns if col != "id"]
                         writer = csv.DictWriter(f, fieldnames=all_columns)
                         writer.writeheader()
                         for session_id, session in row_data:
