@@ -1,13 +1,13 @@
 from src.utils.config import load_config, ensure_dirs
 from src.utils.logging import setup_logging
-import sqlite3, pathlib, csv
+import sqlite3, pathlib, hashlib, csv, requests
 
 class Exporter:
-
     def __init__(self, cfg):
         self.db_path = cfg['paths']['db_path']
         self.output_path = cfg['paths']['raw_dir']
         self.logger = setup_logging(cfg["paths"]["logs_dir"])
+        self.base_url = cfg["paths"]["base_url"]
 
     def _get_db(self):
         """Connect to SQLite DB and return connection"""
@@ -119,9 +119,51 @@ class Exporter:
             self.logger.exception(f"Export failed: {e}")
             raise
 
+    @staticmethod
+    def calculate_checksum(file_path: pathlib.Path) -> str:
+        """Calculate SHA256 checksum of the file."""
+        sha256 = hashlib.sha256()
+        with open(file_path, "rb") as f:
+            for chunk in iter(lambda: f.read(8192), b""):
+                sha256.update(chunk)
+        return sha256.hexdigest()
+
+    def upload_to_server(self, output_path: pathlib.Path):
+        """Upload the output file to server"""
+        file_size = output_path.stat().st_size
+        checksum = self.calculate_checksum(output_path)
+
+        self.logger.info(f"Uploading {file_size} bytes to server")
+
+        presign_resp = requests.post(
+            f"{self.base_url}/api/presign",
+            json={
+                "file_name": output_path.name,
+                "size": file_size,
+                "checksum": checksum,
+            },
+        )
+        presign_resp.raise_for_status()
+        data = presign_resp.json()
+
+        upload_url = data["upload_url"]
+        token = data["token"]
+
+        with open(output_path, "rb") as f:
+            upload_resp = requests.put(
+                upload_url,
+                headers={"Authorization": f"Bearer {token}", "Content-Type": "text/csv"},
+                data=f,
+            )
+        upload_resp.raise_for_status()
+
+        self.logger.info(f"Uploaded to server")
+
+
 if __name__ == "__main__":
     cfg = load_config("config.yaml")
     ensure_dirs(cfg)
 
     exporter = Exporter(cfg)
-    exporter.export_to_csv()
+    output_path = exporter.export_to_csv()
+    exporter.upload_to_server(output_path)

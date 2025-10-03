@@ -8,4 +8,6 @@ paths:
   models_dir: models
   processed_dir: data/processed
   raw_dir: data/raw
+base_url: "https://behavior-based-user-management-upload.onrender.com"
 project_name: behave
+session_label: user1
