@@ -1818,3 +1818,134 @@ TYPE_SPEED:
 2025-09-20 21:38:00,768 | INFO | behav-id | Keyboard data inserted
 2025-09-20 21:38:00,769 | INFO | behav-id | Mouse capture started
 2025-09-20 21:38:00,769 | INFO | behav-id | Keyboard capture started
+2025-09-21 11:44:34,742 | INFO | behav-id | Mouse capture started
+2025-09-21 11:44:34,743 | INFO | behav-id | Keyboard capture started
+2025-09-21 11:44:40,557 | INFO | behav-id | Keyboard capture stopped
+2025-09-21 11:44:40,557 | INFO | behav-id | Mouse capture stopped
+2025-09-21 11:44:40,557 | INFO | behav-id | [+] Ending session pycharm
+2025-09-21 11:44:40,557 | INFO | behav-id | Mouse summary collected
+2025-09-21 11:44:40,558 | INFO | behav-id | ==================================================
+2025-09-21 11:44:40,558 | INFO | behav-id | MOUSE ACTIVITY SUMMARY
+2025-09-21 11:44:40,558 | INFO | behav-id | ==================================================
+2025-09-21 11:44:40,558 | INFO | behav-id |   total_movements: 89
+2025-09-21 11:44:40,558 | INFO | behav-id |   avg_dx: 11.66
+2025-09-21 11:44:40,558 | INFO | behav-id |   avg_dy: 16.71
+2025-09-21 11:44:40,558 | INFO | behav-id |   max_dx: 775.60
+2025-09-21 11:44:40,558 | INFO | behav-id |   max_dy: 695.66
+2025-09-21 11:44:40,558 | INFO | behav-id |   total_distance: 2525.18
+2025-09-21 11:44:40,558 | INFO | behav-id |   total_scrolls: 3
+2025-09-21 11:44:40,558 | INFO | behav-id |   total_scroll_distance: 83
+2025-09-21 11:44:40,558 | INFO | behav-id |   avg_scroll_distance: 27.67
+2025-09-21 11:44:40,558 | INFO | behav-id |   total_clicks: 4
+2025-09-21 11:44:40,558 | INFO | behav-id |   avg_click_interval: 0.58
+2025-09-21 11:44:40,558 | INFO | behav-id |   clicks_per_minute: 137.15
+2025-09-21 11:44:40,558 | INFO | behav-id |   clicks_per_button: {'Button.left': 3, 'Button.right': 1}
+2025-09-21 11:44:40,558 | INFO | behav-id | Keyboard summary collected
+2025-09-21 11:44:40,558 | INFO | behav-id | ==================================================
+2025-09-21 11:44:40,558 | INFO | behav-id | KEYBOARD ACTIVITY SUMMARY
+2025-09-21 11:44:40,558 | INFO | behav-id | ==================================================
+2025-09-21 11:44:40,558 | INFO | behav-id |   keystroke_count: 0
+2025-09-21 11:44:40,558 | INFO | behav-id |   shortcut_count: 1
+2025-09-21 11:44:40,558 | INFO | behav-id |   avg_hold_time: 0.22
+2025-09-21 11:44:40,558 | INFO | behav-id |   all_hold_times: [0.22028493881225586]
+2025-09-21 11:44:40,559 | INFO | behav-id |   total_kb_sessions: 0
+2025-09-21 11:44:40,559 | INFO | behav-id |   avg_cpm: 0
+2025-09-21 11:44:40,559 | INFO | behav-id |   median_cpm: 0
+2025-09-21 11:44:40,559 | INFO | behav-id |   min_cpm: 0
+2025-09-21 11:44:40,559 | INFO | behav-id |   max_cpm: 0
+2025-09-21 11:44:40,559 | INFO | behav-id |   std_deviation: 0
+2025-09-21 11:44:40,559 | INFO | behav-id |   all_kb_sessions_cpm: 0
+2025-09-21 11:44:40,560 | INFO | behav-id | Upserted session e15995e2-f720-448b-a462-29790b6026f9
+2025-09-21 11:44:40,560 | INFO | behav-id | Session inserted
+2025-09-21 11:44:40,560 | INFO | behav-id | Upserted mouse_data e15995e2-f720-448b-a462-29790b6026f9
+2025-09-21 11:44:40,560 | INFO | behav-id | Mouse data inserted
+2025-09-21 11:44:40,560 | INFO | behav-id | Upserted keyboard_data e15995e2-f720-448b-a462-29790b6026f9
+2025-09-21 11:44:40,560 | INFO | behav-id | Keyboard data inserted
+2025-09-21 11:44:40,561 | INFO | behav-id | Mouse capture started
+2025-09-21 11:44:40,561 | INFO | behav-id | Keyboard capture started
+2025-09-21 11:44:41,186 | INFO | behav-id | Keyboard capture stopped
+2025-09-21 11:44:41,186 | INFO | behav-id | Mouse capture stopped
+2025-09-21 11:44:41,186 | INFO | behav-id | [+] Ending session Safari
+2025-09-21 11:44:41,186 | INFO | behav-id | Mouse summary collected
+2025-09-21 11:44:41,187 | INFO | behav-id | ==================================================
+2025-09-21 11:44:41,187 | INFO | behav-id | MOUSE ACTIVITY SUMMARY
+2025-09-21 11:44:41,187 | INFO | behav-id | ==================================================
+2025-09-21 11:44:41,187 | INFO | behav-id |   total_movements: 89
+2025-09-21 11:44:41,187 | INFO | behav-id |   avg_dx: 11.66
+2025-09-21 11:44:41,187 | INFO | behav-id |   avg_dy: 16.71
+2025-09-21 11:44:41,187 | INFO | behav-id |   max_dx: 775.60
+2025-09-21 11:44:41,187 | INFO | behav-id |   max_dy: 695.66
+2025-09-21 11:44:41,187 | INFO | behav-id |   total_distance: 2525.18
+2025-09-21 11:44:41,187 | INFO | behav-id |   total_scrolls: 3
+2025-09-21 11:44:41,187 | INFO | behav-id |   total_scroll_distance: 83
+2025-09-21 11:44:41,187 | INFO | behav-id |   avg_scroll_distance: 27.67
+2025-09-21 11:44:41,187 | INFO | behav-id |   total_clicks: 4
+2025-09-21 11:44:41,187 | INFO | behav-id |   avg_click_interval: 0.58
+2025-09-21 11:44:41,187 | INFO | behav-id |   clicks_per_minute: 137.15
+2025-09-21 11:44:41,187 | INFO | behav-id |   clicks_per_button: {'Button.left': 3, 'Button.right': 1}
+2025-09-21 11:44:41,187 | INFO | behav-id | Keyboard summary collected
+2025-09-21 11:44:41,187 | INFO | behav-id | ==================================================
+2025-09-21 11:44:41,187 | INFO | behav-id | KEYBOARD ACTIVITY SUMMARY
+2025-09-21 11:44:41,187 | INFO | behav-id | ==================================================
+2025-09-21 11:44:41,187 | INFO | behav-id |   keystroke_count: 0
+2025-09-21 11:44:41,187 | INFO | behav-id |   shortcut_count: 2
+2025-09-21 11:44:41,187 | INFO | behav-id |   avg_hold_time: 0.20
+2025-09-21 11:44:41,187 | INFO | behav-id |   all_hold_times: [0.22028493881225586, 0.18465185165405273]
+2025-09-21 11:44:41,187 | INFO | behav-id |   total_kb_sessions: 0
+2025-09-21 11:44:41,187 | INFO | behav-id |   avg_cpm: 0
+2025-09-21 11:44:41,187 | INFO | behav-id |   median_cpm: 0
+2025-09-21 11:44:41,187 | INFO | behav-id |   min_cpm: 0
+2025-09-21 11:44:41,187 | INFO | behav-id |   max_cpm: 0
+2025-09-21 11:44:41,187 | INFO | behav-id |   std_deviation: 0
+2025-09-21 11:44:41,188 | INFO | behav-id |   all_kb_sessions_cpm: 0
+2025-09-21 11:44:41,188 | INFO | behav-id | Upserted session 22bb78a9-7453-4eee-a7e0-e6ea553471cd
+2025-09-21 11:44:41,188 | INFO | behav-id | Session inserted
+2025-09-21 11:44:41,188 | INFO | behav-id | Upserted mouse_data 22bb78a9-7453-4eee-a7e0-e6ea553471cd
+2025-09-21 11:44:41,188 | INFO | behav-id | Mouse data inserted
+2025-09-21 11:44:41,188 | INFO | behav-id | Upserted keyboard_data 22bb78a9-7453-4eee-a7e0-e6ea553471cd
+2025-09-21 11:44:41,188 | INFO | behav-id | Keyboard data inserted
+2025-09-21 11:44:41,189 | INFO | behav-id | Mouse capture started
+2025-09-21 11:44:41,189 | INFO | behav-id | Keyboard capture started
+2025-09-21 11:44:44,110 | INFO | behav-id | Keyboard capture stopped
+2025-09-21 11:44:44,110 | INFO | behav-id | Mouse capture stopped
+2025-09-21 11:44:44,110 | INFO | behav-id | [+] Ending session pycharm
+2025-09-21 11:44:44,110 | INFO | behav-id | Mouse summary collected
+2025-09-21 11:44:44,110 | INFO | behav-id | ==================================================
+2025-09-21 11:44:44,110 | INFO | behav-id | MOUSE ACTIVITY SUMMARY
+2025-09-21 11:44:44,110 | INFO | behav-id | ==================================================
+2025-09-21 11:44:44,110 | INFO | behav-id |   total_movements: 160
+2025-09-21 11:44:44,110 | INFO | behav-id |   avg_dx: 6.75
+2025-09-21 11:44:44,110 | INFO | behav-id |   avg_dy: 11.18
+2025-09-21 11:44:44,110 | INFO | behav-id |   max_dx: 775.60
+2025-09-21 11:44:44,110 | INFO | behav-id |   max_dy: 695.66
+2025-09-21 11:44:44,110 | INFO | behav-id |   total_distance: 2868.32
+2025-09-21 11:44:44,111 | INFO | behav-id |   total_scrolls: 3
+2025-09-21 11:44:44,111 | INFO | behav-id |   total_scroll_distance: 83
+2025-09-21 11:44:44,111 | INFO | behav-id |   avg_scroll_distance: 27.67
+2025-09-21 11:44:44,111 | INFO | behav-id |   total_clicks: 5
+2025-09-21 11:44:44,111 | INFO | behav-id |   avg_click_interval: 1.11
+2025-09-21 11:44:44,111 | INFO | behav-id |   clicks_per_minute: 67.67
+2025-09-21 11:44:44,111 | INFO | behav-id |   clicks_per_button: {'Button.left': 4, 'Button.right': 1}
+2025-09-21 11:44:44,111 | INFO | behav-id | Keyboard summary collected
+2025-09-21 11:44:44,111 | INFO | behav-id | ==================================================
+2025-09-21 11:44:44,111 | INFO | behav-id | KEYBOARD ACTIVITY SUMMARY
+2025-09-21 11:44:44,111 | INFO | behav-id | ==================================================
+2025-09-21 11:44:44,111 | INFO | behav-id |   keystroke_count: 1
+2025-09-21 11:44:44,111 | INFO | behav-id |   shortcut_count: 2
+2025-09-21 11:44:44,111 | INFO | behav-id |   avg_hold_time: 0.17
+2025-09-21 11:44:44,111 | INFO | behav-id |   all_hold_times: [0.11129999160766602, 0.22028493881225586, 0.18465185165405273]
+2025-09-21 11:44:44,111 | INFO | behav-id |   total_kb_sessions: 0
+2025-09-21 11:44:44,111 | INFO | behav-id |   avg_cpm: 0
+2025-09-21 11:44:44,111 | INFO | behav-id |   median_cpm: 0
+2025-09-21 11:44:44,111 | INFO | behav-id |   min_cpm: 0
+2025-09-21 11:44:44,111 | INFO | behav-id |   max_cpm: 0
+2025-09-21 11:44:44,111 | INFO | behav-id |   std_deviation: 0
+2025-09-21 11:44:44,111 | INFO | behav-id |   all_kb_sessions_cpm: 0
+2025-09-21 11:44:44,112 | INFO | behav-id | Upserted session 6769fb36-fb77-43e8-8242-aa92fd73b9bc
+2025-09-21 11:44:44,112 | INFO | behav-id | Session inserted
+2025-09-21 11:44:44,112 | INFO | behav-id | Upserted mouse_data 6769fb36-fb77-43e8-8242-aa92fd73b9bc
+2025-09-21 11:44:44,112 | INFO | behav-id | Mouse data inserted
+2025-09-21 11:44:44,112 | INFO | behav-id | Upserted keyboard_data 6769fb36-fb77-43e8-8242-aa92fd73b9bc
+2025-09-21 11:44:44,112 | INFO | behav-id | Keyboard data inserted
+2025-09-21 11:44:44,112 | INFO | behav-id | Mouse capture started
+2025-09-21 11:44:44,113 | INFO | behav-id | Keyboard capture started
