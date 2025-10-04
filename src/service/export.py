@@ -6,6 +6,7 @@ class Exporter:
     def __init__(self, cfg):
         self.db_path = cfg['paths']['db_path']
         self.output_path = cfg['paths']['raw_dir']
+        self.label = cfg["session_label"]
         self.logger = setup_logging(cfg["paths"]["logs_dir"])
         self.base_url = cfg["base_url"]
 
@@ -141,6 +142,7 @@ class Exporter:
                 "file_name": output_path.name,
                 "size": file_size,
                 "checksum": checksum,
+                "label": self.label
             },
         )
         presign_resp.raise_for_status()
