@@ -7,7 +7,7 @@ class Exporter:
         self.db_path = cfg['paths']['db_path']
         self.output_path = cfg['paths']['raw_dir']
         self.logger = setup_logging(cfg["paths"]["logs_dir"])
-        self.base_url = cfg["paths"]["base_url"]
+        self.base_url = cfg["base_url"]
 
     def _get_db(self):
         """Connect to SQLite DB and return connection"""
