@@ -1,6 +1,6 @@
 # Introduction
 
-This project explores a behavior-based user management system that runs as a background service on Windows and MacOS. While active, it passively measures on-device interaction patterns (e.g., mouse drag velocity, inter-keystroke intervals) to learn a private, local profile of the primary user and flag anomalies that may indicate someone else is using the machine.
+This project explores a behavior-based user management system that runs as a background service on Windows and macOS. While active, it passively measures on-device interaction patterns (e.g., mouse drag velocity, inter-keystroke intervals) to learn a private, local profile of the primary user and flag anomalies that may indicate someone else is using the machine.
 
 # Use Cases
 
@@ -20,22 +20,30 @@ Currently, the program only captures the data from the user input and does not p
 
 2. Create a virtual environment and install the requirement from the file
 ```bash
-    python -m venv .venv
-    ./.venv/Scripts/activate # On MacOs: source ./venv/bin/activate
-    pip install -r requirements.txt
-    pip install pywin32 # Only for windows
+python -m venv .venv
+./.venv/Scripts/activate # On MacOs: source ./venv/bin/activate
+pip install -r requirements.txt
+pip install pywin32 # Only for windows
 ```
 
 3. Bootstrap the program
 ```bash
-    python -m src.service.bootstrap --init --label your_label
+python -m src.service.bootstrap --init --label your_label # Change the label with a valid label
 ```
 
 4. Start the capture
 ```bash
-    python -m src.service.capture
+python -m src.service.capture
 ```
 All captured data will be stored in the sqlite db located in `db_path` (config.yaml).
+
+# Export data
+
+Once you have recorded enough data you can export the data to be saved in a shared bucket for the data to be verified to interim bucket
+
+```bash
+python -m src.service.export   
+```
 
 # Roadmap
 
