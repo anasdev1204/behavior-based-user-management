@@ -47,29 +47,29 @@ class CaptureManager:
         self.store.upsert_session(
             session_id=session_id,
             context="capture",
-            duration=int(time.time()) -self.session_start
+            duration=round(int(time.time())-self.session_start, 2)
         )
 
         self.logger.info("Session inserted")
 
         self.store.upsert_mouse_data(
             session_id=session_id,
-            avg_dx=mouse_summary.get("movement", {}).get("avg_dx"),
-            avg_dy=mouse_summary.get("movement", {}).get("avg_dy"),
-            avg_scroll_distance=mouse_summary.get("scroll", {}).get("avg_scroll_distance"),
-            avg_click_interval=mouse_summary.get("click", {}).get("avg_click_interval"),
-            clicks_per_minute=mouse_summary.get("click", {}).get("clicks_per_minute"),
+            avg_dx=round(mouse_summary.get("movement", {}).get("avg_dx"), 2),
+            avg_dy=round(mouse_summary.get("movement", {}).get("avg_dy"), 2),
+            avg_scroll_distance=round(mouse_summary.get("scroll", {}).get("avg_scroll_distance"), 2),
+            avg_click_interval=round(mouse_summary.get("click", {}).get("avg_click_interval"), 2),
+            clicks_per_minute=round(mouse_summary.get("click", {}).get("clicks_per_minute"), 2),
         )
 
         self.logger.info("Mouse data inserted")
 
         self.store.upsert_kb_data(
             session_id=session_id,
-            avg_cpm=kb_summary.get("type_speed", {}).get("avg_cpm"),
-            median_cpm=kb_summary.get("type_speed", {}).get("median_cpm"),
-            keystroke_count=kb_summary.get("keystrokes", {}).get("keystroke_count"),
-            shortcut_count=kb_summary.get("keystrokes", {}).get("shortcut_count"),
-            avg_hold_time=kb_summary.get("keystrokes", {}).get("avg_hold_time"),
+            avg_cpm=round(kb_summary.get("type_speed", {}).get("avg_cpm"), 2),
+            median_cpm=round(kb_summary.get("type_speed", {}).get("median_cpm"), 2),
+            keystroke_count=round(kb_summary.get("keystrokes", {}).get("keystroke_count"), 2),
+            shortcut_count=round(kb_summary.get("keystrokes", {}).get("shortcut_count"), 2),
+            avg_hold_time=round(kb_summary.get("keystrokes", {}).get("avg_hold_time"), 2),
         )
 
         self.logger.info("Keyboard data inserted")

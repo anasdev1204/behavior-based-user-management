@@ -12,6 +12,8 @@ models/
 logs/
 !logs/.keep
 
+debug/
+
 # build
 dist/
 build/

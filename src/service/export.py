@@ -1,6 +1,7 @@
 from src.utils.config import load_config, ensure_dirs
 from src.utils.logging import setup_logging
-import sqlite3, pathlib, hashlib, csv, requests
+import sqlite3, pathlib, hashlib, csv, requests, os
+import pandas as pd
 
 class Exporter:
     def __init__(self, cfg):
@@ -22,6 +23,13 @@ class Exporter:
 
     def export_to_csv(self):
         """Export all tables into one CSV joined on session_id"""
+        output_files = os.listdir(self.output_path)
+        csv_output_path = pathlib.Path(self.output_path) / "output.csv"
+        i = 1
+        while csv_output_path.name in output_files:
+            csv_output_path = pathlib.Path(self.output_path) / f"output_{i}.csv"
+            i += 1
+
         try:
             with self._get_db() as conn:
                 cursor = conn.cursor()
@@ -71,12 +79,22 @@ class Exporter:
                     self.logger.warning("No tables with session_id column found")
                     return None
 
+                df = pd.DataFrame()
+                if len(output_files) > 0:
+                    for o_f in output_files:
+                        if o_f.endswith(".csv"):
+                            df = pd.concat([df, pd.read_csv(
+                                pathlib.Path(self.output_path) / o_f
+                            )], ignore_index=True)
+
                 # Build sessions dict from the first table
                 try:
                     sessions_table = next(iter(table_data))
                     sessions = {}
                     for row in table_data[sessions_table]["rows"]:
-                        sessions[row["session_id"]] = row
+                        session_id = row["session_id"]
+                        if (not "session_id" in df.columns) or (session_id not in df["session_id"].tolist()):
+                            sessions[row["session_id"]] = row
                     del table_data[sessions_table]
                     self.logger.info(f"Sessions initialized from table `{sessions_table}` ({len(sessions)} rows)")
                 except Exception as e:
@@ -89,8 +107,9 @@ class Exporter:
                         rows = tdata["rows"]
                         for r in rows:
                             session_id = r["session_id"]
-                            if session_id not in sessions:
-                                sessions[session_id] = {}
+                            if session_id not in sessions.keys():
+                                continue
+
                             sessions[session_id].update({k: v for k, v in r.items() if k != "id"})
                         self.logger.info(f"Merged {len(rows)} rows from table `{table_name}` into sessions")
                     except Exception as e:
@@ -98,23 +117,26 @@ class Exporter:
 
                 row_data = [v for v in sessions.items()]
 
-                # Write to CSV
-                try:
-                    output_path = pathlib.Path(self.output_path) / "output.csv"
-                    with output_path.open("w", newline="", encoding="utf-8") as f:
-                        all_columns = [col for col in all_columns if col != "id"]
-                        writer = csv.DictWriter(f, fieldnames=all_columns)
-                        writer.writeheader()
-                        for session_id, session in row_data:
-                            row_to_write = {col: session.get(col, None) for col in all_columns}
-                            writer.writerow(row_to_write)
-                    self.logger.info(f"Wrote to {output_path}")
-                    self.logger.info(f"CSV file has {len(row_data)} rows and {len(all_columns)} columns")
-                except Exception as e:
-                    self.logger.error(f"Failed to write CSV: {e}")
-                    raise
+                if len(row_data) > 0:
+                    # Write to CSV
+                    try:
+                        with csv_output_path.open("w", newline="", encoding="utf-8") as f:
+                            all_columns = [col for col in all_columns if col != "id"]
 
-                return output_path
+                            writer = csv.DictWriter(f, fieldnames=all_columns)
+                            writer.writeheader()
+                            for session_id, session in row_data:
+                                row_to_write = {col: session.get(col, None) for col in all_columns}
+                                writer.writerow(row_to_write)
+                        self.logger.info(f"Wrote to {csv_output_path}")
+                        self.logger.info(f"CSV file has {len(row_data)} rows and {len(all_columns)} columns")
+                    except Exception as e:
+                        self.logger.error(f"Failed to write CSV: {e}")
+                        raise
+                else:
+                    self.logger.warning("No new rows to export")
+
+                return csv_output_path, len(row_data) > 0
 
         except Exception as e:
             self.logger.exception(f"Export failed: {e}")
@@ -129,17 +151,17 @@ class Exporter:
                 sha256.update(chunk)
         return sha256.hexdigest()
 
-    def upload_to_server(self, output_path: pathlib.Path):
+    def upload_to_server(self, csv_output_path: pathlib.Path):
         """Upload the output file to server"""
-        file_size = output_path.stat().st_size
-        checksum = self.calculate_checksum(output_path)
+        file_size = csv_output_path.stat().st_size
+        checksum = self.calculate_checksum(csv_output_path)
 
         self.logger.info(f"Uploading {file_size} bytes to server")
 
         presign_resp = requests.post(
             f"{self.base_url}/api/presign",
             json={
-                "file_name": output_path.name,
+                "file_name": csv_output_path.name,
                 "size": file_size,
                 "checksum": checksum,
                 "label": self.label
@@ -151,7 +173,7 @@ class Exporter:
         upload_url = data["upload_url"]
         token = data["token"]
 
-        with open(output_path, "rb") as f:
+        with open(csv_output_path, "rb") as f:
             upload_resp = requests.put(
                 upload_url,
                 headers={"Authorization": f"Bearer {token}", "Content-Type": "text/csv"},
@@ -167,5 +189,6 @@ if __name__ == "__main__":
     ensure_dirs(cfg)
 
     exporter = Exporter(cfg)
-    output_path = exporter.export_to_csv()
-    exporter.upload_to_server(output_path)
+    csv_output_path, is_new_data = exporter.export_to_csv()
+    if is_new_data:
+        exporter.upload_to_server(csv_output_path)
