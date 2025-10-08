@@ -118,15 +118,12 @@ class MouseCapture:
 
     def _get_movement_stats(self) -> dict:
         """Get statistics about mouse movement"""
-        if not self.move_dx or not self.move_dy:
-            return {"message": "No movement data recorded"}
-
         return {
             "total_movements": len(self.move_dx) or 0,
-            "avg_dx": statistics.mean(self.move_dx) or 0,
-            "avg_dy": statistics.mean(self.move_dy) or 0,
-            "max_dx": max(self.move_dx) or 0,
-            "max_dy": max(self.move_dy) or 0,
+            "avg_dx": statistics.mean(self.move_dx) if self.move_dx else 0,
+            "avg_dy": statistics.mean(self.move_dy) if self.move_dy else 0,
+            "max_dx": max(self.move_dx) if self.move_dx else 0,
+            "max_dy": max(self.move_dy) if self.move_dy else 0,
             "total_distance": (sum(self.move_dx) + sum(self.move_dy)) or 0
         }
 
