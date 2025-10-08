@@ -14,8 +14,8 @@ Currently, the program only captures the data from the user input and does not p
 
 1. Clone the repository
 ``` bash
-    git clone https://github.com/anasdev1204/behavior-based-user-management.git 
-    cd behavior-based-user-management
+git clone https://github.com/anasdev1204/behavior-based-user-management.git 
+cd behavior-based-user-management
 ```
 
 2. Create a virtual environment and install the requirement from the file
@@ -49,8 +49,8 @@ python -m src.service.export
 
 -   [x] **Scope, repo, environment, config, storage schema** — Define goals, set up repository, create environment and configuration, and design a local storage format for event streams and features.
 -   [x] **Input capture MVP (keyboard + mouse)** — Collect low-level keyboard and mouse events with minimal overhead.
--   [ ] **Convert raw events into stable features over rolling windows** — Compute features (e.g., dwell/flight times, path curvature, click cadence) with noise-robust statistics.
--   [ ] **Labeled data collection + EDA** — Gather self-labeled sessions, build train/validation splits, and perform exploratory analysis.
+-   [x] **Convert raw events into stable features over rolling windows** — Compute features (e.g., dwell/flight times, path curvature, click cadence) with statistics.
+-   [x] **Labeled data collection + EDA** — Gather self-labeled sessions, build train/validation splits, and perform exploratory analysis.
 -   [ ] **Modeling & validation** — Train per-user anomaly/verification models; evaluate with ROC/PR, equal-error rate, and latency/CPU budget.
 -   [ ] **Background service + real-time loop** — Package as a Windows service with a streaming feature pipeline and real-time inference.
 -   [ ] **Validation in the wild, tuning, and hardening** — Run pilots on diverse hardware, tune thresholds, add fallbacks, and harden against spoofing and drift.
@@ -58,4 +58,3 @@ python -m src.service.export
 # Disclaimer
 
 This project **does not** collect personally identifiable content or transmit data off-device. All processing stays local, focuses on behavioral timing/shape signals (not text or screen contents), and is designed to preserve user privacy.
-*NOTE*: The program currently saves the keys pressed by the user but only for testing purposes. This feature will not be used in the final version of the program
